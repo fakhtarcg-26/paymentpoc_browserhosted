@@ -1,2 +1,63 @@
-<head></head>
-<body></body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Card Entry</title>
+    <style>
+      body { background: #121926; color: #fff; font-family: sans-serif; }
+      .container { max-width: 450px; margin: 40px auto; background: #181f2a; padding: 20px; border-radius: 10px; }
+      label { display: block; margin-top: 14px; }
+      input { width: 100%; padding: 10px; font-size: 16px; border-radius: 6px; border: 1px solid #3a4f70; background: #232a38; color: #fff; }
+      .actions { margin-top: 20px; display: flex; gap: 10px; }
+      button { flex: 1; padding: 10px; border-radius: 6px; border: none; background: #4a7fd7; color: white; font-weight: bold; cursor: pointer; }
+      .message { margin-top: 16px; border-radius: 6px; padding: 10px; }
+      .message.ok { background: #143430; color: #4ade80; }
+      .message.error { background: #352427; color: #ff5b5b; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <form id="payment-form" autocomplete="off">
+        <label>Card Number</label>
+        <input type="text" id="cardNumber" placeholder="4111 1111 1111 1111" maxlength="19" inputmode="numeric" required>
+        <label>Expiration Date</label>
+        <input type="text" id="expDate" placeholder="MM/YY" maxlength="5" inputmode="numeric" required>
+        <label>CVV</label>
+        <input type="text" id="cvv" placeholder="123" maxlength="4" inputmode="numeric" required>
+        <div class="actions">
+          <button type="button" id="cancelBtn">Cancel</button>
+          <button type="submit" id="payBtn">Continue</button>
+        </div>
+        <div id="message" class="message" style="display:none"></div>
+      </form>
+    </div>
+    <script>
+      const cardNumber = document.getElementById('cardNumber');
+      const expDate = document.getElementById('expDate');
+      const cvv = document.getElementById('cvv');
+      const payBtn = document.getElementById('payBtn');
+      const cancelBtn = document.getElementById('cancelBtn');
+      const message = document.getElementById('message');
+      cardNumber.oninput = expDate.oninput = cvv.oninput = () => {
+        payBtn.disabled = !(cardNumber.value && expDate.value && cvv.value);
+      };
+      cancelBtn.onclick = () => {
+        cardNumber.value = expDate.value = cvv.value = '';
+        message.style.display = 'block';
+        message.className = 'message';
+        message.textContent = 'Canceled.';
+        payBtn.disabled = false;
+      };
+      document.getElementById('payment-form').onsubmit = (e) => {
+        e.preventDefault();
+        message.style.display = 'block';
+        message.className = 'message ok';
+        message.textContent = 'Saved (mock, no real payment).';
+        payBtn.disabled = false;
+        cancelBtn.disabled = false;
+      };
+      payBtn.disabled = true;
+    </script>
+  </body>
+</html>
